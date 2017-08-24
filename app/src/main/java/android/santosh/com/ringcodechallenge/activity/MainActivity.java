@@ -1,5 +1,6 @@
-package android.santosh.com.ringcodechallenge;
+package android.santosh.com.ringcodechallenge.activity;
 
+import android.santosh.com.ringcodechallenge.R;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
