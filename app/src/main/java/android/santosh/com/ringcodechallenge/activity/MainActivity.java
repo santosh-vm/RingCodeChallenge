@@ -1,10 +1,10 @@
 package android.santosh.com.ringcodechallenge.activity;
 
 import android.santosh.com.ringcodechallenge.R;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+    private static String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
