@@ -39,7 +39,6 @@ public class MainController {
     private List<RedditPost> redditPosts = new ArrayList<RedditPost>();
     private final Object redditPostLock = new Object();
 
-    private String currentBefore = null;
     private String currentAfter = null;
 
     public MainController(Handler uiHandler) {
@@ -90,7 +89,7 @@ public class MainController {
     }
 
     public void resetData() {
-        currentBefore = null;
+        redditPosts.clear();
         currentAfter = null;
     }
 

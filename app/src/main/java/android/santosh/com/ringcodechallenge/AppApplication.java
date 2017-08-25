@@ -21,6 +21,7 @@ public class AppApplication extends Application {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
+        appAPI.getMainController().resetData();
     }
 
     public AppAPI getAppAPI() {
