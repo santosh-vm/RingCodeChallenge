@@ -1,4 +1,4 @@
-package android.santosh.com.ringcodechallenge;
+package android.santosh.com.ringcodechallenge.model;
 
 import com.google.gson.annotations.SerializedName;
 

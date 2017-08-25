@@ -1,7 +1,5 @@
 package android.santosh.com.ringcodechallenge.model;
 
-import android.santosh.com.ringcodechallenge.RedditPostData;
-
 import com.google.gson.annotations.SerializedName;
 
 /**

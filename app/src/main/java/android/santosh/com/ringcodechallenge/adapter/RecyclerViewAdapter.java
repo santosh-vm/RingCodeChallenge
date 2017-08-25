@@ -2,7 +2,7 @@ package android.santosh.com.ringcodechallenge.adapter;
 
 import android.content.Context;
 import android.santosh.com.ringcodechallenge.R;
-import android.santosh.com.ringcodechallenge.RedditPostData;
+import android.santosh.com.ringcodechallenge.model.RedditPostData;
 import android.santosh.com.ringcodechallenge.model.RedditPost;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

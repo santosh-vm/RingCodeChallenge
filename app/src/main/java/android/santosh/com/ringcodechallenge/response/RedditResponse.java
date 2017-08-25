@@ -1,4 +1,4 @@
-package android.santosh.com.ringcodechallenge;
+package android.santosh.com.ringcodechallenge.response;
 
 import android.santosh.com.ringcodechallenge.model.RedditPost;
 

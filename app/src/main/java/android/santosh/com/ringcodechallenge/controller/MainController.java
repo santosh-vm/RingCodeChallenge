@@ -1,8 +1,8 @@
 package android.santosh.com.ringcodechallenge.controller;
 
 import android.os.Handler;
-import android.santosh.com.ringcodechallenge.RedditPostData;
-import android.santosh.com.ringcodechallenge.RedditResponse;
+import android.santosh.com.ringcodechallenge.model.RedditPostData;
+import android.santosh.com.ringcodechallenge.response.RedditResponse;
 import android.santosh.com.ringcodechallenge.listeners.MainControllerListener;
 import android.santosh.com.ringcodechallenge.model.RedditPost;
 import android.util.Log;

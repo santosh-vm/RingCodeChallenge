@@ -1,6 +1,6 @@
 package android.santosh.com.ringcodechallenge.listeners;
 
-import android.santosh.com.ringcodechallenge.RedditPostData;
+import android.santosh.com.ringcodechallenge.model.RedditPostData;
 
 import java.util.List;
 
