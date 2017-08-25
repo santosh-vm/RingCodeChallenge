@@ -1,6 +1,8 @@
 package android.santosh.com.ringcodechallenge;
 
 import android.app.Application;
+import android.content.ComponentCallbacks;
+import android.content.ComponentCallbacks2;
 import android.os.Handler;
 import android.santosh.com.ringcodechallenge.controller.MainController;
 import android.util.Log;
@@ -23,8 +25,12 @@ public class AppApplication extends Application {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        //Log.d(TAG,"onTrimMemory");
-        //appAPI.getMainController().resetData();
+        //Log.d(TAG, "onTrimMemory, level: " + level);
+        if(level == ComponentCallbacks2.TRIM_MEMORY_COMPLETE
+                || level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL){
+            appAPI.getMainController().resetData();
+        }
+
     }
 
     public AppAPI getAppAPI() {
