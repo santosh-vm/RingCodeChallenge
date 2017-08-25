@@ -1,13 +1,20 @@
 package android.santosh.com.ringcodechallenge.controller;
 
 import android.os.Handler;
+import android.santosh.com.ringcodechallenge.RedditPostData;
 import android.santosh.com.ringcodechallenge.RedditResponse;
+import android.santosh.com.ringcodechallenge.listeners.MainControllerListener;
+import android.santosh.com.ringcodechallenge.model.RedditPost;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,6 +35,7 @@ public class MainController {
     private ExecutorService executorService;
     private OkHttpClient client;
     private Gson gson;
+    private List<MainControllerListener> mainControllerListeners = Collections.synchronizedList(new ArrayList<MainControllerListener>());
 
     private String currentBefore = null;
     private String currentAfter = null;
@@ -53,21 +61,63 @@ public class MainController {
                         switch (response.code()) {
                             case 200:
                                 RedditResponse redditResponse = gson.fromJson(stringyfiedJson, RedditResponse.class);
-                                Log.d(TAG, "redditResponse redditResponse.getMainData().getAfter(): " + redditResponse.getMainData().getAfter());
-                                Log.d(TAG, "redditResponse redditResponse.getMainData().getBefore(): " + redditResponse.getMainData().getBefore());
-
+                                Log.d(TAG, "redditResponse redditResponse.getMainData().getRedditPosts().length: " + redditResponse.getMainData().getRedditPosts().length);
+                                List<RedditPost> redditPostDataList = Arrays.asList(redditResponse.getMainData().getRedditPosts());
                                 break;
                             default:
-                                //TODO: notify Failure
+                                notifyRedditPostListFetchFailure();
                                 break;
                         }
                     } catch (IOException iex) {
-                        //TODO: notify Failure
+                        notifyRedditPostListFetchFailure();
                     }
                 }
             });
         } else {
-            //TODO: notify Failure
+            notifyRedditPostListFetchFailure();
+        }
+    }
+
+    public void resetData() {
+        currentBefore = null;
+        currentAfter = null;
+    }
+
+    public void addMainControllerListener(MainControllerListener mainControllerListener) {
+        if (mainControllerListeners != null && !mainControllerListeners.contains(mainControllerListener)) {
+            mainControllerListeners.add(mainControllerListener);
+        }
+    }
+
+    public void removeMainControllerListener(MainControllerListener mainControllerListener) {
+        if (mainControllerListeners != null && mainControllerListeners.contains(mainControllerListener)) {
+            mainControllerListeners.add(mainControllerListener);
+        }
+    }
+
+    public void notifyRedditPostListFetchSuccess(final List<RedditPostData> redditPostDataList) {
+        if (mainControllerListeners != null && mainControllerListeners.size() > 0) {
+            for (final MainControllerListener mainControllerListener : mainControllerListeners) {
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainControllerListener.onRedditPostListFetchSuccess(redditPostDataList);
+                    }
+                });
+            }
+        }
+    }
+
+    public void notifyRedditPostListFetchFailure() {
+        if (mainControllerListeners != null && mainControllerListeners.size() > 0) {
+            for (final MainControllerListener mainControllerListener : mainControllerListeners) {
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainControllerListener.onRedditPostListFetchFailure();
+                    }
+                });
+            }
         }
     }
 }

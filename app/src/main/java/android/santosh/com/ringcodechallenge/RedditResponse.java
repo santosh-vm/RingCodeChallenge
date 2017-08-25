@@ -1,5 +1,7 @@
 package android.santosh.com.ringcodechallenge;
 
+import android.santosh.com.ringcodechallenge.model.RedditPost;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -16,7 +18,7 @@ public class RedditResponse {
 
     public static class MainData {
         @SerializedName("children")
-        Children[] childrens;
+        RedditPost[] redditPosts;
 
         @SerializedName("after")
         String after;
@@ -24,8 +26,8 @@ public class RedditResponse {
         @SerializedName("before")
         String before;
 
-        public Children[] getChildrens() {
-            return childrens;
+        public RedditPost[] getRedditPosts() {
+            return redditPosts;
         }
 
         public String getAfter() {
@@ -34,16 +36,6 @@ public class RedditResponse {
 
         public String getBefore() {
             return before;
-        }
-    }
-
-
-    public static class Children {
-        @SerializedName("data")
-        RedditPostData redditPostData;
-
-        public RedditPostData getRedditPostData() {
-            return redditPostData;
         }
     }
 }
