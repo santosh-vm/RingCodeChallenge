@@ -1,10 +1,12 @@
 package android.santosh.com.ringcodechallenge.activity;
 
+import android.os.Parcelable;
 import android.santosh.com.ringcodechallenge.R;
 import android.os.Bundle;
 import android.santosh.com.ringcodechallenge.adapter.RecyclerViewAdapter;
 import android.santosh.com.ringcodechallenge.listeners.MainControllerListener;
 import android.santosh.com.ringcodechallenge.model.RedditPost;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,11 +18,34 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements MainControllerListener {
     private static String TAG = MainActivity.class.getSimpleName();
+    private static String LIST_STATE_KEY = "LIST_STATE_KEY";
 
     private ProgressBar progressBar;
     private TextView errorMessageTextView;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private LinearLayoutManager recyclerViewLinearLayoutManger;
+    private Parcelable recyclerViewListSate;
+
+    private boolean isLoading = false;
+    int previousVisibleItems, visibleItemCount, totalItemCount;
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (dy > 0) {
+                visibleItemCount = recyclerViewLinearLayoutManger.getChildCount();
+                totalItemCount = recyclerViewLinearLayoutManger.getItemCount();
+                previousVisibleItems = recyclerViewLinearLayoutManger.findFirstVisibleItemPosition();
+
+                if (!isLoading && ((visibleItemCount + previousVisibleItems) >= totalItemCount)) {
+                    Log.d(TAG, "Let's Fetch more posts");
+                    isLoading = true;
+                    appAPI.getMainController().fetchPost();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +66,28 @@ public class MainActivity extends BaseActivity implements MainControllerListener
         //RecyclerView
         recyclerViewAdapter = new RecyclerViewAdapter(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        LinearLayoutManager recyclerViewLinearLayoutManger = new LinearLayoutManager(this);
+        recyclerViewLinearLayoutManger = new LinearLayoutManager(this);
         recyclerViewLinearLayoutManger.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(recyclerViewLinearLayoutManger);
         recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.setVisibility(View.GONE);
+        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        List<RedditPost> redditPosts = appAPI.getMainController().getRedditPosts();
+        Log.d(TAG,"onCreate redditPosts.size: "+redditPosts.size());
+        if (redditPosts.size() > 0) {
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerViewAdapter.swapReddiPosts(redditPosts);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            appAPI.getMainController().fetchPost();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (recyclerViewAdapter.getItemCount() <= 0) {
-            Log.d(TAG,"recyclerViewAdapter.getItemCount() is less than zero.");
-            appAPI.getMainController().fetchPost();
-        } else {
-            Log.d(TAG,"recyclerViewAdapter from memory.");
-        }
     }
 
     @Override
@@ -72,11 +103,12 @@ public class MainActivity extends BaseActivity implements MainControllerListener
         errorMessageTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         recyclerViewAdapter.addAll(redditPostList);
+        isLoading = false;
     }
 
     @Override
     public void onRedditPostListFetchFailure() {
-        Log.d(TAG, "onRedditPostListFetchFailure()");
+        //Log.d(TAG, "onRedditPostListFetchFailure()");
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         if (recyclerViewAdapter.getItemCount() <= 0) {
@@ -84,5 +116,6 @@ public class MainActivity extends BaseActivity implements MainControllerListener
         } else {
             errorMessageTextView.setVisibility(View.GONE);
         }
+        isLoading = false;
     }
 }

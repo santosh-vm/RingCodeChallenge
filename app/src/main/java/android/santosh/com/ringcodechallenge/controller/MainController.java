@@ -36,6 +36,8 @@ public class MainController {
     private OkHttpClient client;
     private Gson gson;
     private List<MainControllerListener> mainControllerListeners = Collections.synchronizedList(new ArrayList<MainControllerListener>());
+    private List<RedditPost> redditPosts = new ArrayList<RedditPost>();
+    private final Object redditPostLock = new Object();
 
     private String currentBefore = null;
     private String currentAfter = null;
@@ -63,7 +65,9 @@ public class MainController {
                                 RedditResponse redditResponse = gson.fromJson(stringyfiedJson, RedditResponse.class);
                                 Log.d(TAG, "redditResponse redditResponse.getMainData().getRedditPosts().length: " + redditResponse.getMainData().getRedditPosts().length);
                                 List<RedditPost> redditPostDataList = Arrays.asList(redditResponse.getMainData().getRedditPosts());
+                                redditPosts.addAll(redditPostDataList);
                                 notifyRedditPostListFetchSuccess(redditPostDataList);
+                                currentAfter = redditResponse.getMainData().getAfter();
                                 break;
                             default:
                                 notifyRedditPostListFetchFailure();
@@ -76,6 +80,12 @@ public class MainController {
             });
         } else {
             notifyRedditPostListFetchFailure();
+        }
+    }
+
+    public List<RedditPost> getRedditPosts(){
+        synchronized (redditPostLock){
+            return new ArrayList<>(redditPosts);
         }
     }
 

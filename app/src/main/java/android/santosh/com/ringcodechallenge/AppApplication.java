@@ -18,6 +18,11 @@ public class AppApplication extends Application {
         appAPI = new AppAPI(mainController);
     }
 
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+    }
+
     public AppAPI getAppAPI() {
         return appAPI;
     }
