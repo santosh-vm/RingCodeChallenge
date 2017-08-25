@@ -1,6 +1,6 @@
 package android.santosh.com.ringcodechallenge.listeners;
 
-import android.santosh.com.ringcodechallenge.model.RedditPostData;
+import android.santosh.com.ringcodechallenge.model.RedditPost;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public interface MainControllerListener {
-    void onRedditPostListFetchSuccess(List<RedditPostData> redditPostDataList);
+    void onRedditPostListFetchSuccess(List<RedditPost> redditPostList);
 
     void onRedditPostListFetchFailure();
 }

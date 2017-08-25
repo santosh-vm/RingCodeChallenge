@@ -63,6 +63,7 @@ public class MainController {
                                 RedditResponse redditResponse = gson.fromJson(stringyfiedJson, RedditResponse.class);
                                 Log.d(TAG, "redditResponse redditResponse.getMainData().getRedditPosts().length: " + redditResponse.getMainData().getRedditPosts().length);
                                 List<RedditPost> redditPostDataList = Arrays.asList(redditResponse.getMainData().getRedditPosts());
+                                notifyRedditPostListFetchSuccess(redditPostDataList);
                                 break;
                             default:
                                 notifyRedditPostListFetchFailure();
@@ -95,13 +96,13 @@ public class MainController {
         }
     }
 
-    public void notifyRedditPostListFetchSuccess(final List<RedditPostData> redditPostDataList) {
+    public void notifyRedditPostListFetchSuccess(final List<RedditPost> redditPostList) {
         if (mainControllerListeners != null && mainControllerListeners.size() > 0) {
             for (final MainControllerListener mainControllerListener : mainControllerListeners) {
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mainControllerListener.onRedditPostListFetchSuccess(redditPostDataList);
+                        mainControllerListener.onRedditPostListFetchSuccess(redditPostList);
                     }
                 });
             }
