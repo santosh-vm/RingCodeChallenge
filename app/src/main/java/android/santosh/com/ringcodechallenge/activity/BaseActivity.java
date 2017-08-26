@@ -11,10 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 
 public class BaseActivity extends AppCompatActivity {
     protected AppAPI appAPI;
+    protected static String THUMBNAIL_URL_INTENT_KEY = "THUMBNAIL_URL_INTENT_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
         appAPI = ((AppApplication)getApplication()).getAppAPI();
     }
 }
